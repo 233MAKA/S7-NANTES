@@ -707,8 +707,437 @@ PPT 最后一行 remark 说：
 
 ---
 
-如果你愿意，我们可以下一步做两件事里的一件：
+# 4- #️⃣ **4 启发式与知情搜索（Heuristiques et recherches informées）**
 
-1. **选一个最经典的小问题（比如迷宫 / 8 数码 / 水壶问题），我按 PPT 的定义 18/19/20/21/25 给你画出“搜索树”变化，让你看到每种算法对树结构的影响。**
+---
+
+## 4.1- **✦ Fait 29**
+
+### 4.1.1- **【法语】**
+
+Recherche **et** choix ⇒ Utiliser _raisonnablement_ la puissance de calcul de l’ordinateur.
+
+### 4.1.2- **【中文翻译】**
+
+“搜索 + 选择” ⇒ 应当**合理地使用**计算机的计算能力。
+
+### 4.1.3- **【解释】**
+
+第 3 章我们讲的是“盲目搜索”，也就是：  
+所有分支都要尝试。
+
+而第 4 章开始强调：
+
+> 搜索不能只靠暴力枚举，要靠“选择”  
+> 要让算法更聪明，而不是更累。
+
+“合理使用计算能力” = 不要盲搜 → 用**启发式（heuristic）**。
+
+---
+
+## 4.2- **✦ Fait 30**
+
+### 4.2.1- **【法语】**
+
+Il s’agit ici de fournir au système une connaissance **experte** sur le problème,  
+c’est-à-dire d’introduire enfin un peu d’« intelligence » dans le programme.
+
+### 4.2.2- **【中文翻译】**
+
+这里要做的是向系统提供一些关于问题的**专家知识**，  
+也就是：终于在程序中加入一点“智能”。
+
+### 4.2.3- **【解释】**
+
+所谓启发式，就是给算法加点“聪明的大脑”。
+
+例子：A* 搜索
+
+- h(n) = 当前状态到目标的预估距离
     
-2. 或者你给我一题 TD 里的题目，我帮你按这套定义写“R(e) 是什么”“B、A、M 是什么”，直接贴近作业。
+- 这个“预估法”就是“专家知识”
+    
+
+---
+## 4.3- #️⃣ **4.1 方法家族（Familles d’approches）**
+
+---
+
+### 4.3.1- **【法语】**
+
+1. algorithme **exact** dans les **cas pratiques**
+    
+2. algorithme **efficace** pour des **sous-classes** de problèmes
+    
+3. algorithme **approximatifs**, avec garanties…
+    
+4. algorithme **approximatifs**, sans garanties…
+    
+
+### 4.3.2- **【中文翻译】**
+
+1. **精确算法（exact）**（在实际规模下可用）
+    
+2. **高效算法**（只针对某些子问题类别）
+    
+3. **近似算法，有保证**（approximation with guarantees）
+    
+4. **近似算法，无保证**
+    
+
+### 4.3.3- **【解释】**
+
+有些问题（如 TSP）：
+
+- 精确算法（exact）在理论上可做，但太慢
+    
+- 于是我们有启发式、贪心、A*、估价函数等方法
+    
+- 这些都属于启发式家族
+    
+
+---
+
+---
+
+## 4.4- #️⃣ **4.2 非确定性或完美选择（Non-déterminisme ou le choix parfait）**
+
+---
+
+## 4.5- **Définition 31：Oracle（神谕）**
+
+### 4.5.1- **【法语】**
+
+Un oracle, choix_nd(X), renvoie toujours la (une) valeur x ∈ X qui amène à une solution, si elle existe  
+(échec implicite, ⊥, si X = ∅).
+
+### 4.5.2- **【中文翻译】**
+
+一个神谕（oracle）choix_nd(X) 总是返回集合 X 中**能够通往解的那个 x**（如果存在）。  
+如果 X 空，则返回失败（⊥）。
+
+### 4.5.3- **【解释】**
+
+这是“完美选择器”：  
+给它一组操作，它总选对的那个（超自然能力）。
+
+现实中当然不存在，但它用于**定义**带 oracle 的搜索模型。
+
+---
+
+## 4.6- **Définition 32：无回溯的搜索（带 oracle）**
+
+### 4.6.1- **【中文翻译】**
+
+[  
+R(e) =  
+\begin{cases}  
+() & \text{如果 } e \in F \  
+S & \text{如果 } SR \neq \bot \  
+\bot & \text{否则}  
+\end{cases}  
+]
+
+其中：
+
+- (o = choix_nd({o \in O : p(o,e)}))
+    
+- (SR = R(o(e)))
+    
+- (S = (o) \otimes SR)
+    
+
+### 4.6.2- **【解释】**
+
+如果有神谕：
+
+- 每次都选**正确操作 o**
+    
+- 所以完全**不需要回溯**
+    
+- 直接一步走到底
+    
+
+→ “完美选择”模型。
+
+---
+
+## 4.7- **练习：**
+
+解决旅行商问题（TSP）——假设你有神谕。  
+（当然结果是瞬间解出。）
+
+---
+
+## 4.8- **备注：Oracle 在实践中靠什么实现？**
+
+1. 尽可能“有信息”的选择（heuristic）
+    
+2. 如果选错，再回溯
+    
+
+在 Prolog 中，oracle 就是：
+
+```
+member(X, L)
+```
+
+---
+
+---
+
+## 4.9- #️⃣ **4.3 启发式用于完整搜索（Heuristiques pour recherches totales）**
+
+---
+
+## 4.10- 意思概述：
+
+> 使用启发式进行搜索  
+> 让“选择”更加聪明  
+> 优先探索更有希望的分支
+
+## 4.11- 4.11**4.3.1 死胡同检测（Détection des impasses）**
+
+---
+
+### 4.11.1- **Définition 33：Impasse（死胡同）**
+
+### 4.11.2- **【法语】**
+
+Un état e est une impasse si, et seulement si,  
+quels que soient les chemins issus de e dans le graphe,  
+aucun n’arrive à un état final f ∈ F.
+
+### 4.11.3- **【中文翻译】**
+
+一个状态 e 是死胡同，当且仅当：  
+从 e 出发的所有路径都无法到达任何终态 f。
+
+### 4.11.4- **【解释】**
+
+Impasse ≠ 没有操作  
+它可能能继续走，但最终 **永远不可能成功**。
+
+例如：
+
+- 8-puzzle 中某些排列不可达
+    
+- 图搜索中某些节点会通往无限循环，但不抵达终点
+    
+
+启发式可以提前识别“必死状态”，直接剪枝。
+
+---
+
+## 4.12- **备注：**
+
+死胡同不像 precondition（前置条件）那样简单：
+
+- precondition 只管当前操作是否能执行
+    
+- impasse 要考虑状态“未来能不能解决”
+    
+- 因此不适合放入操作的前置条件中
+    
+- 否则要在所有操作的 precondition 中重复 impasse 检测
+    
+
+---
+
+---
+
+## 4.13- 5-**4.3.2 选择顺序优化（Ordonnancement des choix）**
+
+### 4.13.1- **【法语】**
+
+Il est préférable qu’une (ou la meilleure) solution se trouve dans le premier fils d’un état.  
+En cas de chance extrême, elle serait même trouvée en temps linéaire !
+
+### 4.13.2- **【中文翻译】**
+
+最好情况下，某个（或最优）解就位于当前节点的第一个子节点。  
+如果极其幸运，甚至能在线性时间内找到解！
+
+### 4.13.3- **【解释】**
+
+这是“把最可能成功的分支放在最前面”的策略。
+
+例：在 TSP 中先尝试最近的城市。
+
+---
+
+## 4.14- **Définition 34：加入排序启发式的分离与评估**
+
+### 4.14.1- **关键变化：**
+
+把候选操作集合
+
+```
+{o ∈ O : p(o,e) ∧ c(o,e) ≤ B}
+```
+
+交给：
+
+```
+tri_heuristique(...)
+```
+
+排序成“更可能成功的顺序”。
+
+### 4.14.2- **解释：**
+
+就是让 branch & bound **从最有希望的分支开始展开**。
+
+---
+
+---
+
+## 4.15- 5-**4.3.3 启发式评估（Évaluation heuristique）**
+
+---
+
+## 4.16- **Définition 35：代价下界启发式（minorante）**
+
+### 4.16.1- **【中文】**
+
+定义一个启发式集合 (H = { h : O \times E \to \mathbb{R}^+ })，  
+满足：
+
+[  
+h(o,e) \le \text{coût}(R_{BB}(e))  
+]
+
+意思：  
+**h 是实际代价的保守估计（永远比真实代价低）**
+
+### 4.16.2- **解释：**
+
+这是 A* 的下界启发式（admissible heuristic）思想。
+
+---
+
+## 4.17- **Définition 36：加入评估启发式的分离与评估**
+
+主要变化：
+
+- 过滤时用 `h(o,e) ≤ B`
+    
+- 排序时对操作集合进行 `tri`（可能按 h 排）
+    
+- 如果 `h(o,e) > B` 则直接剪枝
+    
+
+→ 完整版 branch & bound + 启发式。
+
+---
+
+## 4.18- **备注：**
+
+- T 中额外的测试（h(o,e) > B）是为了在 B 收紧时剪掉以前打开的分支
+    
+- impasse（死胡同）可以被视作 h(e)=∞ 的启发式
+    
+
+---
+
+---
+
+## 4.19- **4.3.4 约束传播（Propagation de contraintes）**
+
+---
+
+## 4.20- **Fait 37**
+
+### 4.20.1- **中文：**
+
+加入约束能减少搜索空间，无论：
+
+- 静态地（E）
+    
+- 动态地（R）
+    
+
+---
+
+## 4.21- **Fait 38：约束传播的原则**
+
+1. 选择**最受约束的元素**
+    
+2. 尽可能传播选择的后果
+    
+
+### 4.21.1- **解释：**
+
+这是约束满足问题（CSP）中的：
+
+- MRV（Minimum Remaining Value）
+    
+- Forward Checking
+    
+- AC-3（Arc Consistency）
+    
+
+---
+
+## 4.22- **示例：N 皇后问题**
+
+两种表示 E：
+
+1. 直接表示（矩阵 n×n） → 太大
+    
+2. 按列表示（长度 n 的数组）→ 约束小很多
+    
+
+R 的几个策略：
+
+1. 按顺序放置 → 8^8 ≈ 10^7
+    
+2. 在合法行中选择 → 8! ≈ 10^4
+    
+3. 约束传播 → 约 10^2
+    
+
+→ 得到巨大改进。
+
+---
+
+---
+
+## 4.23- 🎯 最终总结（你看懂了就是通关 4 章）
+
+第 4 章主要讲：
+
+---
+
+## 4.24- 🌟 启发式的三大方向：
+
+### 4.24.1- **死胡同检测（impasse）**
+
+- 识别必死的状态
+    
+- 提前剪枝
+    
+- 大幅减少搜索
+    
+
+### 4.24.2- **选择顺序优化（ordonnancement）**
+
+- 把“更可能成功”的分支放前面
+    
+- 可能极端情况下在线性时间就找到解
+    
+
+### 4.24.3- **启发式评估（evaluation heuristique）**
+
+- 加一个估价函数 h
+    
+- 结合 branch & bound
+    
+- 得到 A* 级别的智能搜索
+
+---
+## 4.25- 🌟 最终效果：
+
+**让搜索变“聪明”而不是“暴力”。**
+
+---
